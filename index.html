@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MIDC EduSpark — Skill Development Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#030712;
+  --bg2:#060d1f;
+  --surface:#0b1629;
+  --card:#0f1e35;
+  --card2:#111f38;
+  --border:#1a2d4a;
+  --border2:#1e3354;
+  --primary:#00d4ff;
+  --accent:#7c3aed;
+  --accent2:#a855f7;
+  --gold:#f59e0b;
+  --green:#10b981;
+
+  --red:#ef4444;
+  --text:#e2eaf8;
+  --muted:#6b84a8;
+
+  --font-display:'Orbitron',sans-serif;
+
+  --font-body:'Outfit',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --glow:0 0 30px rgba(0,212,255,0.25);
+  --glow2:0 0 30px rgba(124,58,237,0.3);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--primary2);border-radius:2px}
+
+/* ── CURSOR ── */
+.cursor{width:12px;height:12px;background:var(--primary);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s,background .2s;mix-blend-mode:screen}
+.cursor-ring{width:36px;height:36px;border:1px solid var(--primary);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .4s,width .3s,height .3s,opacity .3s;opacity:.5}
+.cursor.hov{transform:translate(-50%,-50%) scale(2);background:var(--accent2)}
+.cursor-ring.hov{width:56px;height:56px;opacity:.2;border-color:var(--accent2)}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;background:rgba(3,7,18,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:padding .3s}
+nav.scrolled{padding:.7rem 4rem;background:rgba(3,7,18,.97)}
+.nav-logo{display:flex;align-items:center;gap:.7rem}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;font-family:var(--font-display);box-shadow:var(--glow)}
+.logo-text{font-family:var(--font-display);font-size:1rem;letter-spacing:.1em;color:var(--text);line-height:1.15}
+.logo-text span{color:var(--primary);display:block;font-size:.65rem;letter-spacing:.2em;color:var(--muted)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);transition:color .2s;position:relative;padding-bottom:4px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--primary);transition:width .3s}
+.nav-links a:hover{color:var(--primary)}
+.nav-links a:hover::after{width:100%}
+.nav-cta-group{display:flex;gap:.8rem;align-items:center}
+.btn-nav{background:none;border:1px solid var(--border2);color:var(--text);padding:.5rem 1.2rem;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all .2s}
+.btn-nav:hover{border-color:var(--primary);color:var(--primary)}
+.btn-nav-cta{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;padding:.55rem 1.4rem;font-family:var(--font-display);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:transform .2s,box-shadow .2s;box-shadow:var(--glow)}
+.btn-nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(0,212,255,.4)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:8rem 4rem 4rem}
+.hero-particles{position:absolute;inset:0;overflow:hidden;z-index:0}
+.particle{position:absolute;width:2px;height:2px;background:var(--primary);border-radius:50%;animation:particleFloat linear infinite;opacity:0}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:50px 50px;z-index:0}
+.grid-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(0,212,255,.06) 0%,transparent 70%)}
+.hero-glow-left{position:absolute;left:-200px;top:20%;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.18) 0%,transparent 70%);z-index:0}
+.hero-glow-right{position:absolute;right:-100px;bottom:10%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,212,255,.12) 0%,transparent 70%);z-index:0}
+.hero-content{text-align:center;position:relative;z-index:1;max-width:900px}
+.hero-badge{display:inline-flex;align-items:center;gap:.6rem;border:1px solid rgba(0,212,255,.3);background:rgba(0,212,255,.06);padding:.45rem 1.2rem;border-radius:100px;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);margin-bottom:2rem;animation:fadeUp .8s ease forwards;opacity:0}
+.badge-dot{width:6px;height:6px;background:var(--primary);border-radius:50%;animation:pulse 2s infinite}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.8rem,7vw,6.5rem);line-height:.95;letter-spacing:.02em;color:#fff;margin-bottom:1.5rem;animation:fadeUp .9s .1s ease forwards;opacity:0}
+.hero-title .line2{color:var(--primary);display:block;text-shadow:0 0 60px rgba(0,212,255,.5)}
+.hero-title .line3{display:block;font-size:clamp(1.5rem,3.5vw,3rem);color:var(--muted);font-weight:400;letter-spacing:.08em;margin-top:.4rem}
+.hero-desc{font-size:1.1rem;color:var(--muted);line-height:1.8;max-width:600px;margin:0 auto 2.5rem;font-weight:300;animation:fadeUp 1s .2s ease forwards;opacity:0}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp 1s .3s ease forwards;opacity:0}
+.btn-primary{background:linear-gradient(135deg,var(--primary),#0077aa);color:#fff;border:none;padding:1rem 2.5rem;font-family:var(--font-display);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:6px;transition:transform .2s,box-shadow .2s;box-shadow:0 0 30px rgba(0,212,255,.35)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(0,212,255,.5)}
+.btn-secondary{background:none;border:1px solid var(--border2);color:var(--text);padding:1rem 2.2rem;font-family:var(--font-display);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:6px;transition:all .2s}
+.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.hero-stats{display:flex;gap:3rem;justify-content:center;margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border);animation:fadeUp 1s .4s ease forwards;opacity:0}
+.stat{text-align:center}
+.stat-num{font-family:var(--font-display);font-size:2rem;color:var(--primary);text-shadow:0 0 20px rgba(0,212,255,.4)}
+.stat-label{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:.3rem}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.6rem;z-index:1;animation:fadeUp 1s .5s ease forwards;opacity:0}
+.hero-scroll span{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.scroll-dot{width:1px;height:50px;background:linear-gradient(to bottom,var(--primary),transparent);animation:scrollAnim 2s infinite}
+
+/* ── MARQUEE ── */
+.marquee-strip{overflow:hidden;background:linear-gradient(90deg,var(--accent),var(--primary));padding:.8rem 0}
+.marquee-track{display:inline-flex;gap:2.5rem;animation:marquee 25s linear infinite;white-space:nowrap}
+.marquee-item{font-family:var(--font-display);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:.8rem}
+.marquee-item::after{content:'◆';font-size:.5rem;opacity:.7}
+
+/* ── SECTIONS ── */
+section{padding:7rem 4rem;position:relative}
+.sec-label{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--primary);margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+.sec-label::before{content:'';display:inline-block;width:20px;height:1px;background:var(--primary)}
+.sec-title{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);line-height:1;color:#fff;margin-bottom:1rem}
+.sec-desc{color:var(--muted);font-size:.98rem;line-height:1.75;max-width:580px;margin-bottom:3.5rem}
+
+/* ── ABOUT ── */
+#about{background:var(--bg2)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-visual{position:relative}
+.about-card-main{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2.5rem;position:relative;overflow:hidden}
+.about-card-main::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.about-glow{position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(0,212,255,.15),transparent 70%);z-index:0}
+.about-icon-big{font-size:4rem;margin-bottom:1.2rem;position:relative;z-index:1}
+.about-card-main h3{font-family:var(--font-display);font-size:1.4rem;letter-spacing:.06em;color:#fff;margin-bottom:.8rem;position:relative;z-index:1}
+.about-card-main p{color:var(--muted);font-size:.92rem;line-height:1.75;position:relative;z-index:1}
+.about-chips{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.2rem;position:relative;z-index:1}
+.chip{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);color:var(--primary);padding:.3rem .8rem;border-radius:100px;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase}
+.about-mini-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+.mini-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem;text-align:center;transition:border-color .2s,transform .2s}
+.mini-card:hover{border-color:var(--primary);transform:translateY(-3px)}
+.mini-icon{font-size:1.6rem;margin-bottom:.5rem}
+.mini-num{font-family:var(--font-display);font-size:1.5rem;color:var(--primary)}
+.mini-lbl{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.about-features{display:flex;flex-direction:column;gap:1.2rem}
+.feature-item{display:flex;gap:1rem;align-items:flex-start}
+.feat-icon{width:42px;height:42px;border-radius:8px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.feat-text h4{font-family:var(--font-display);font-size:.9rem;letter-spacing:.05em;color:#fff;margin-bottom:.3rem}
+.feat-text p{color:var(--muted);font-size:.85rem;line-height:1.6}
+
+/* ── COURSES ── */
+#courses{background:var(--bg)}
+.course-filters{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:3rem}
+.cf-btn{background:none;border:1px solid var(--border2);color:var(--muted);padding:.5rem 1.2rem;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all .2s}
+.cf-btn.active,.cf-btn:hover{background:var(--primary);border-color:var(--primary);color:#000}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s;position:relative;display:flex;flex-direction:column}
+.course-card:hover{transform:translateY(-8px);border-color:var(--primary);box-shadow:0 20px 60px rgba(0,212,255,.1)}
+.course-card-top{padding:1.8rem 1.8rem 1.2rem;position:relative;overflow:hidden}
+.course-card-glow{position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;opacity:.3;transition:opacity .3s}
+.course-card:hover .course-card-glow{opacity:.6}
+.course-tag-row{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.course-tag{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;padding:.25rem .7rem;border-radius:100px;border:1px solid}
+.course-icon{font-size:2.8rem;margin-bottom:1rem;display:block}
+.course-name{font-family:var(--font-display);font-size:1.15rem;letter-spacing:.04em;color:#fff;margin-bottom:.5rem;line-height:1.2}
+.course-tagline{color:var(--muted);font-size:.85rem;line-height:1.6;margin-bottom:1rem}
+.course-meta{display:flex;gap:1rem;flex-wrap:wrap}
+.meta-item{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+.meta-item span{color:var(--text)}
+.course-card-bot{padding:1.2rem 1.8rem 1.5rem;border-top:1px solid var(--border);margin-top:auto}
+.course-price-row{display:flex;align-items:center;justify-content:space-between}
+.price-stack{display:flex;flex-direction:column}
+.price-old{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);text-decoration:line-through}
+.price-new{font-family:var(--font-display);font-size:1.5rem;color:var(--primary);text-shadow:0 0 15px rgba(0,212,255,.3)}
+.price-emi{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--green);margin-top:.1rem}
+.enroll-btn{background:linear-gradient(135deg,var(--primary),#0077aa);color:#fff;border:none;padding:.7rem 1.5rem;font-family:var(--font-display);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:6px;transition:transform .2s,box-shadow .2s;box-shadow:0 0 20px rgba(0,212,255,.2)}
+.enroll-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(0,212,255,.4)}
+.course-topics{padding:0 1.8rem 1.5rem;display:none;border-top:1px solid var(--border);margin-top:.5rem}
+.course-card.expanded .course-topics{display:block}
+.topics-list{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.topic{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);color:var(--text);padding:.3rem .7rem;border-radius:4px;font-size:.75rem}
+
+/* ── PROGRAMS TRACK ── */
+#tracks{background:var(--bg2)}
+.tracks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.track-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;overflow:hidden;cursor:pointer;transition:all .3s}
+.track-card:hover{border-color:var(--accent2);transform:translateY(-5px);box-shadow:0 20px 50px rgba(124,58,237,.15)}
+.track-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity .3s}
+.track-card:hover::before{opacity:1}
+.track-icon{font-size:2.5rem;margin-bottom:1rem}
+.track-name{font-family:var(--font-display);font-size:1.1rem;letter-spacing:.06em;color:#fff;margin-bottom:.6rem}
+.track-desc{color:var(--muted);font-size:.85rem;line-height:1.65;margin-bottom:1.2rem}
+.track-courses{display:flex;flex-wrap:wrap;gap:.5rem}
+.track-tag{font-family:var(--font-mono);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .65rem;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--muted)}
+.track-badge{position:absolute;top:1.2rem;right:1.2rem;font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;padding:.25rem .65rem;border-radius:100px}
+
+/* ── PROCESS ── */
+#process{background:var(--bg)}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.process-steps::before{content:'';position:absolute;top:2.5rem;left:calc(12.5% + 1rem);right:calc(12.5% + 1rem);height:1px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--primary));opacity:.3;z-index:0}
+.step{text-align:center;padding:0 1.5rem;position:relative;z-index:1}
+.step-num{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1rem;letter-spacing:.05em;color:#fff;margin:0 auto 1.2rem;border:1px solid;position:relative}
+.step-num::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px dashed;animation:rotateSlow 8s linear infinite;opacity:.3}
+.step-icon{font-size:1.2rem;margin-bottom:.8rem}
+.step-title{font-family:var(--font-display);font-size:.9rem;letter-spacing:.06em;color:#fff;margin-bottom:.5rem}
+.step-desc{color:var(--muted);font-size:.82rem;line-height:1.6}
+
+/* ── TESTIMONIALS ── */
+#testimonials{background:var(--bg2)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.testi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;transition:border-color .3s,transform .3s}
+.testi-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.testi-card::before{content:'"';position:absolute;top:.5rem;right:1.5rem;font-family:var(--font-display);font-size:5rem;color:var(--border);line-height:1;z-index:0}
+.testi-stars{display:flex;gap:3px;margin-bottom:1rem;color:var(--gold)}
+.testi-text{color:var(--muted);font-size:.88rem;line-height:1.75;margin-bottom:1.5rem;position:relative;z-index:1}
+.testi-author{display:flex;align-items:center;gap:.8rem}
+.testi-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;font-family:var(--font-display)}
+.testi-name{font-family:var(--font-display);font-size:.9rem;letter-spacing:.04em;color:#fff}
+.testi-role{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.testi-course-tag{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border-radius:100px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);color:var(--primary);margin-left:auto;white-space:nowrap}
+
+/* ── PRICING HIGHLIGHT ── */
+#pricing{background:var(--bg)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.pricing-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2.5rem;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.pricing-card.featured{border-color:var(--primary);box-shadow:0 0 60px rgba(0,212,255,.1)}
+.pricing-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.popular-tag{position:absolute;top:1.2rem;right:1.2rem;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .8rem;border-radius:100px}
+.pricing-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.pricing-tier{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--primary);margin-bottom:.6rem}
+.pricing-name{font-family:var(--font-display);font-size:1.5rem;letter-spacing:.05em;color:#fff;margin-bottom:1rem}
+.pricing-amount{font-family:var(--font-display);font-size:3rem;color:#fff;line-height:1;margin-bottom:.3rem}
+.pricing-amount span{font-size:1.2rem;color:var(--muted);font-family:var(--font-body);font-weight:300}
+.pricing-period{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.1em;color:var(--muted);margin-bottom:1.5rem}
+.pricing-divider{height:1px;background:var(--border);margin:1.5rem 0}
+.pricing-features{display:flex;flex-direction:column;gap:.8rem;margin-bottom:2rem}
+.p-feat{display:flex;align-items:center;gap:.7rem;font-size:.88rem;color:var(--text)}
+.p-feat-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0}
+.p-feat-icon.yes{background:rgba(16,185,129,.15);color:var(--green)}
+.p-feat-icon.no{background:rgba(107,132,168,.1);color:var(--muted)}
+.p-feat.disabled{color:var(--muted)}
+.pricing-btn{width:100%;padding:1rem;font-family:var(--font-display);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:6px;transition:all .3s}
+.pricing-btn.outline{background:none;border:1px solid var(--border2);color:var(--text)}
+.pricing-btn.outline:hover{border-color:var(--primary);color:var(--primary)}
+.pricing-btn.solid{background:linear-gradient(135deg,var(--primary),#0077aa);border:none;color:#fff;box-shadow:0 0 25px rgba(0,212,255,.3)}
+.pricing-btn.solid:hover{box-shadow:0 0 40px rgba(0,212,255,.5);transform:translateY(-2px)}
+
+/* ── CTA BANNER ── */
+.cta-section{background:linear-gradient(135deg,rgba(0,212,255,.1) 0%,rgba(124,58,237,.15) 100%),var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:6rem 4rem;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(0,212,255,0.04)' stroke-width='1'%3E%3Crect x='0' y='0' width='60' height='60'/%3E%3C/g%3E%3C/svg%3E")}
+.cta-section h2{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);color:#fff;margin-bottom:1rem;position:relative;z-index:1}
+.cta-section p{color:var(--muted);font-size:1rem;line-height:1.75;max-width:550px;margin:0 auto 2.5rem;position:relative;z-index:1}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+/* ── CONTACT ── */
+#contact{background:var(--bg2)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.contact-info{display:flex;flex-direction:column;gap:1.5rem}
+.contact-item{display:flex;align-items:flex-start;gap:1rem;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:border-color .2s}
+.contact-item:hover{border-color:var(--primary)}
+.contact-icon{width:46px;height:46px;border-radius:8px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.contact-detail h4{font-family:var(--font-display);font-size:.9rem;letter-spacing:.05em;color:#fff;margin-bottom:.3rem}
+.contact-detail p{color:var(--muted);font-size:.85rem;line-height:1.6}
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2.5rem;position:relative;overflow:hidden}
+.contact-form::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{margin-bottom:1.2rem}
+.form-label{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.5rem}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bg);border:1px solid var(--border2);color:var(--text);padding:.85rem 1rem;font-family:var(--font-body);font-size:.9rem;border-radius:6px;outline:none;transition:border-color .2s,box-shadow .2s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,212,255,.08)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--muted)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b84a8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
+.form-textarea{resize:vertical;min-height:120px}
+.form-submit{width:100%;padding:1.1rem;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;font-family:var(--font-display);font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:6px;transition:all .3s;box-shadow:0 0 25px rgba(0,212,255,.2)}
+.form-submit:hover{box-shadow:0 0 40px rgba(0,212,255,.4);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg);padding:5rem 4rem 2rem;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:4rem;margin-bottom:4rem}
+.footer-brand .logo-text{font-size:1.2rem}
+.footer-brand p{color:var(--muted);font-size:.88rem;line-height:1.75;max-width:300px;margin-top:.8rem}
+.footer-social{display:flex;gap:.7rem;margin-top:1.5rem}
+.soc{width:36px;height:36px;border:1px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer;color:var(--muted);transition:all .2s}
+.soc:hover{border-color:var(--primary);color:var(--primary);background:rgba(0,212,255,.06)}
+.footer-col h5{font-family:var(--font-display);font-size:.85rem;letter-spacing:.08em;color:#fff;margin-bottom:1.2rem}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+.footer-col a{color:var(--muted);font-size:.85rem;transition:color .2s}
+.footer-col a:hover{color:var(--primary)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:2rem;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.footer-badges{display:flex;gap:.6rem}
+.badge-cert{background:var(--card);border:1px solid var(--border);padding:.3rem .7rem;border-radius:4px;font-family:var(--font-mono);font-size:.55rem;letter-spacing:.08em;color:var(--muted)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--card);border:1px solid var(--primary);color:var(--text);padding:1rem 1.5rem;border-radius:8px;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;z-index:9000;transform:translateY(80px);opacity:0;transition:all .3s;box-shadow:0 10px 40px rgba(0,212,255,.2)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:5000;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(8px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:2.5rem;max-width:520px;width:100%;position:relative;transform:scale(.9);transition:transform .3s;max-height:90vh;overflow-y:auto}
+.modal-overlay.open .modal-box{transform:scale(1)}
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:16px 16px 0 0}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--border2);color:var(--muted);width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{border-color:var(--primary);color:var(--primary)}
+.modal-icon{font-size:3rem;margin-bottom:1rem}
+.modal-tag{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);margin-bottom:.5rem}
+.modal-title{font-family:var(--font-display);font-size:1.6rem;letter-spacing:.04em;color:#fff;margin-bottom:.8rem}
+.modal-desc{color:var(--muted);font-size:.9rem;line-height:1.75;margin-bottom:1.5rem}
+.modal-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.modal-info-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.modal-info-item label{font-family:var(--font-mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.3rem}
+.modal-info-item value{font-family:var(--font-display);font-size:1rem;color:#fff}
+.modal-topics h4{font-family:var(--font-display);font-size:.9rem;letter-spacing:.05em;color:#fff;margin-bottom:.8rem}
+.modal-topics-list{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+.modal-enroll-btn{width:100%;padding:1.1rem;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;font-family:var(--font-display);font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:8px;transition:all .3s;box-shadow:0 0 25px rgba(0,212,255,.2)}
+.modal-enroll-btn:hover{box-shadow:0 0 40px rgba(0,212,255,.5)}
+
+/* ── MOBILE NAV ── */
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:2rem;padding:2rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:var(--font-display);font-size:2rem;letter-spacing:.08em;color:var(--text);transition:color .2s}
+.mobile-menu a:hover{color:var(--primary)}
+.mobile-menu-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scrollAnim{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+@keyframes rotateSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes particleFloat{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:.6}90%{opacity:.4}100%{transform:translateY(-10vh) translateX(var(--px));opacity:0}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(0,212,255,.2)}50%{box-shadow:0 0 40px rgba(0,212,255,.5)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.tracks-grid{grid-template-columns:repeat(2,1fr)}.pricing-grid{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){nav{padding:1rem 1.5rem}.nav-links,.nav-cta-group{display:none}.hamburger{display:flex}section{padding:5rem 1.5rem}.hero{padding:6rem 1.5rem 4rem}.about-grid,.contact-grid{grid-template-columns:1fr;gap:3rem}.courses-grid{grid-template-columns:1fr}.tracks-grid{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr}.testi-grid{grid-template-columns:1fr}.process-steps{grid-template-columns:repeat(2,1fr);gap:2rem}.process-steps::before{display:none}.footer-grid{grid-template-columns:1fr 1fr;gap:2.5rem}.hero-stats{gap:1.5rem;flex-wrap:wrap}.form-row{grid-template-columns:1fr}}
+@media(max-width:480px){.pricing-grid,.tracks-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.modal-info-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#courses" onclick="closeMobileMenu()">Courses</a>
+  <a href="#tracks" onclick="closeMobileMenu()">Programs</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+  <a href="#testimonials" onclick="closeMobileMenu()">Reviews</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="logo-icon">ES</div>
+    <div class="logo-text">MIDC EduSpark<span>Skill Development Centre</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#tracks">Programs</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-cta-group">
+    <button class="btn-nav">Login</button>
+    <button class="btn-nav-cta" onclick="scrollTo('#courses')">Enroll Now</button>
+  </div>
+  <button class="hamburger" onclick="openMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-particles" id="particles"></div>
+  <div class="grid-bg"></div>
+  <div class="hero-glow-left"></div>
+  <div class="hero-glow-right"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="badge-dot"></span>Maharashtra's Premier IT Skill Centre</div>
+    <h1 class="hero-title">
+      BUILD THE SKILLS<br>
+      <span class="line2">FUTURE DEMANDS</span>
+      <span class="line3">MIDC EduSpark — Where Talent Meets Technology</span>
+    </h1>
+    <p class="hero-desc">Master AI, Cloud, IoT, Cyber Security, BI & more with industry-certified courses designed for the real world. Government recognised · NSDC aligned · 100% placement support.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="scrollTo('#courses')">Explore Courses</button>
+      <button class="btn-secondary" onclick="scrollTo('#contact')">Free Counselling →</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="sCount1">0</div><div class="stat-label">Students Trained</div></div>
+      <div class="stat"><div class="stat-num" id="sCount2">0</div><div class="stat-label">Courses Offered</div></div>
+      <div class="stat"><div class="stat-num" id="sCount3">0</div><div class="stat-label">Hiring Partners</div></div>
+      <div class="stat"><div class="stat-num" id="sCount4">0</div><div class="stat-label">Placement Rate</div></div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll to explore</span>
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track" id="marqueeTrack">
+    <span class="marquee-item">Artificial Intelligence</span>
+    <span class="marquee-item">Machine Learning</span>
+    <span class="marquee-item">Cloud Computing</span>
+    <span class="marquee-item">IoT Engineering</span>
+    <span class="marquee-item">Cyber Security</span>
+    <span class="marquee-item">Business Intelligence</span>
+    <span class="marquee-item">CAD Design</span>
+    <span class="marquee-item">Data Science</span>
+    <span class="marquee-item">DevOps</span>
+    <span class="marquee-item">Full Stack Dev</span>
+    <span class="marquee-item">Artificial Intelligence</span>
+    <span class="marquee-item">Machine Learning</span>
+    <span class="marquee-item">Cloud Computing</span>
+    <span class="marquee-item">IoT Engineering</span>
+    <span class="marquee-item">Cyber Security</span>
+    <span class="marquee-item">Business Intelligence</span>
+    <span class="marquee-item">CAD Design</span>
+    <span class="marquee-item">Data Science</span>
+    <span class="marquee-item">DevOps</span>
+    <span class="marquee-item">Full Stack Dev</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual">
+      <div class="about-card-main">
+        <div class="about-glow"></div>
+        <div class="about-icon-big">🎓</div>
+        <h3>MIDC EduSpark Skill Development Centre</h3>
+        <p>Established under the MIDC initiative, EduSpark is a government-backed skill development centre delivering cutting-edge IT & technology education to students and professionals across Maharashtra.</p>
+        <div class="about-chips">
+          <span class="chip">NSDC Aligned</span>
+          <span class="chip">ISO Certified</span>
+          <span class="chip">Govt. Recognised</span>
+          <span class="chip">Industry Mentors</span>
+        </div>
+      </div>
+      <div class="about-mini-cards">
+        <div class="mini-card"><div class="mini-icon">🏆</div><div class="mini-num">5+</div><div class="mini-lbl">Years Active</div></div>
+        <div class="mini-card"><div class="mini-icon">🤝</div><div class="mini-num">80+</div><div class="mini-lbl">Industry Partners</div></div>
+        <div class="mini-card"><div class="mini-icon">🌍</div><div class="mini-num">15+</div><div class="mini-lbl">Cities Reached</div></div>
+        <div class="mini-card"><div class="mini-icon">📜</div><div class="mini-num">20+</div><div class="mini-lbl">Certifications</div></div>
+      </div>
+    </div>
+    <div>
+      <p class="sec-label">Why Choose Us</p>
+      <h2 class="sec-title">Skills That<br>Get You Hired</h2>
+      <p class="sec-desc">We blend theoretical knowledge with hands-on lab experience, live projects, and dedicated placement support to ensure every learner lands their dream job.</p>
+      <div class="about-features">
+        <div class="feature-item">
+          <div class="feat-icon">🧑‍💻</div>
+          <div class="feat-text"><h4>Industry Expert Instructors</h4><p>Learn from professionals with 10+ years of real-world experience in top MNCs and startups.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feat-icon">🔬</div>
+          <div class="feat-text"><h4>Live Projects & Labs</h4><p>Work on real-time projects, build your portfolio, and gain practical skills that matter on day one.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feat-icon">📊</div>
+          <div class="feat-text"><h4>Placement Cell Support</h4><p>Dedicated HR team, mock interviews, resume reviews, and direct referrals to 80+ hiring partners.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feat-icon">🎯</div>
+          <div class="feat-text"><h4>Flexible Batches</h4><p>Weekend, weekday, morning & evening batches — designed to fit working professionals and students alike.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses">
+  <p class="sec-label">Our Curriculum</p>
+  <h2 class="sec-title">Explore All Courses</h2>
+  <p class="sec-desc">From beginner-friendly foundations to advanced professional certifications — every course is built with the job market in mind.</p>
+  <div class="course-filters">
+    <button class="cf-btn active" onclick="filterCourses('all',this)">All Courses</button>
+    <button class="cf-btn" onclick="filterCourses('ai',this)">AI & ML</button>
+    <button class="cf-btn" onclick="filterCourses('cloud',this)">Cloud</button>
+    <button class="cf-btn" onclick="filterCourses('iot',this)">IoT</button>
+    <button class="cf-btn" onclick="filterCourses('security',this)">Security</button>
+    <button class="cf-btn" onclick="filterCourses('data',this)">Data & BI</button>
+    <button class="cf-btn" onclick="filterCourses('dev',this)">Development</button>
+    <button class="cf-btn" onclick="filterCourses('design',this)">Design & CAD</button>
+  </div>
+  <div class="courses-grid" id="coursesGrid"></div>
+</section>
+
+<!-- PROGRAM TRACKS -->
+<section id="tracks">
+  <p class="sec-label">Learning Pathways</p>
+  <h2 class="sec-title">Career-Focused<br>Program Tracks</h2>
+  <p class="sec-desc">Don't know where to start? Follow one of our structured tracks — curated sequences of courses designed to take you from zero to job-ready.</p>
+  <div class="tracks-grid">
+    <div class="track-card" style="--tc:var(--primary)">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),#0077aa)"></div>
+      <span class="track-badge" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--primary)">8 Months</span>
+      <div class="track-icon">🤖</div>
+      <div class="track-name">AI & Data Science Track</div>
+      <div class="track-desc">Master the full AI pipeline — from Python fundamentals to deploying ML models in production. Ideal for engineers & analysts.</div>
+      <div class="track-courses">
+        <span class="track-tag">Python Basics</span>
+        <span class="track-tag">Statistics</span>
+        <span class="track-tag">ML Algorithms</span>
+        <span class="track-tag">Deep Learning</span>
+        <span class="track-tag">AI BI</span>
+        <span class="track-tag">MLOps</span>
+      </div>
+    </div>
+    <div class="track-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
+      <span class="track-badge" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);color:var(--accent2)">6 Months</span>
+      <div class="track-icon">☁️</div>
+      <div class="track-name">Cloud & DevOps Track</div>
+      <div class="track-desc">From cloud fundamentals to CI/CD pipelines — build, deploy, and scale applications on AWS, Azure & GCP.</div>
+      <div class="track-courses">
+        <span class="track-tag">Cloud Essentials</span>
+        <span class="track-tag">AWS / Azure</span>
+        <span class="track-tag">Docker</span>
+        <span class="track-tag">Kubernetes</span>
+        <span class="track-tag">DevOps</span>
+        <span class="track-tag">Terraform</span>
+      </div>
+    </div>
+    <div class="track-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),#0dbf6f)"></div>
+      <span class="track-badge" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green)">5 Months</span>
+      <div class="track-icon">🛡️</div>
+      <div class="track-name">Cyber Security Track</div>
+      <div class="track-desc">Ethical hacking, network security, SOC operations and VAPT — your fast track to a cybersecurity career.</div>
+      <div class="track-courses">
+        <span class="track-tag">Network Basics</span>
+        <span class="track-tag">Ethical Hacking</span>
+        <span class="track-tag">VAPT</span>
+        <span class="track-tag">SOC Analyst</span>
+        <span class="track-tag">Compliance</span>
+      </div>
+    </div>
+    <div class="track-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),#e08700)"></div>
+      <span class="track-badge" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--gold)">7 Months</span>
+      <div class="track-icon">📡</div>
+      <div class="track-name">IoT & Embedded Systems Track</div>
+      <div class="track-desc">Design smart devices, work with sensors, microcontrollers, and cloud-connected IoT ecosystems end-to-end.</div>
+      <div class="track-courses">
+        <span class="track-tag">Arduino</span>
+        <span class="track-tag">Raspberry Pi</span>
+        <span class="track-tag">MQTT</span>
+        <span class="track-tag">IoT Cloud</span>
+        <span class="track-tag">Edge AI</span>
+      </div>
+    </div>
+    <div class="track-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f43f5e,#e11d48)"></div>
+      <span class="track-badge" style="background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);color:#f43f5e">6 Months</span>
+      <div class="track-icon">💻</div>
+      <div class="track-name">Full Stack Development Track</div>
+      <div class="track-desc">Build complete web applications from frontend to backend — React, Node.js, databases, APIs, and deployment.</div>
+      <div class="track-courses">
+        <span class="track-tag">HTML/CSS</span>
+        <span class="track-tag">JavaScript</span>
+        <span class="track-tag">React</span>
+        <span class="track-tag">Node.js</span>
+        <span class="track-tag">MongoDB</span>
+        <span class="track-tag">AWS Deploy</span>
+      </div>
+    </div>
+    <div class="track-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#06b6d4,#0891b2)"></div>
+      <span class="track-badge" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.3);color:#06b6d4">4 Months</span>
+      <div class="track-icon">📐</div>
+      <div class="track-name">Design & CAD Track</div>
+      <div class="track-desc">From concept to production — AutoCAD, SolidWorks, and UI/UX design skills for engineering and product teams.</div>
+      <div class="track-courses">
+        <span class="track-tag">AutoCAD</span>
+        <span class="track-tag">SolidWorks</span>
+        <span class="track-tag">Figma</span>
+        <span class="track-tag">UI/UX</span>
+        <span class="track-tag">3D Modelling</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <p class="sec-label">How It Works</p>
+  <h2 class="sec-title" style="text-align:center;margin-bottom:.6rem">Your Journey to</h2>
+  <h2 class="sec-title" style="text-align:center;color:var(--primary);margin-bottom:3rem">Success in 4 Steps</h2>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,var(--primary),#0077aa);border-color:var(--primary)">01<div style="position:absolute;inset:-4px;border-radius:50%;border:1px dashed rgba(0,212,255,.3);animation:rotateSlow 8s linear infinite"></div></div>
+      <div class="step-icon">🎯</div>
+      <div class="step-title">Choose Your Course</div>
+      <div class="step-desc">Browse our catalogue, compare courses, and pick the track that aligns with your career goals.</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent)">02</div>
+      <div class="step-icon">📝</div>
+      <div class="step-title">Enroll & Register</div>
+      <div class="step-desc">Complete your enrollment online, choose your batch timing, and get instant access to learning materials.</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,var(--gold),#d97706);border-color:var(--gold)">03</div>
+      <div class="step-icon">🧑‍💻</div>
+      <div class="step-title">Learn & Build</div>
+      <div class="step-desc">Attend live classes, complete lab assignments, build real projects, and earn your certification.</div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,var(--green),#059669);border-color:var(--green)">04</div>
+      <div class="step-icon">🚀</div>
+      <div class="step-title">Get Placed</div>
+      <div class="step-desc">Work with our placement cell, ace your interviews, and land your dream job at a top company.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <p class="sec-label">Student Success Stories</p>
+  <h2 class="sec-title">Real Results,<br>Real Careers</h2>
+  <p class="sec-desc">Hear from our graduates who transformed their careers with MIDC EduSpark.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">The AI & ML course was absolutely transformative. The instructors are from industry, the projects are real, and I got placed at Infosys within 2 months of completing the course!</p>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div><div class="testi-name">Aditya Mane</div><div class="testi-role">ML Engineer · Infosys Pune</div></div>
+        <span class="testi-course-tag">AI & ML</span>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">I was a mechanical engineer with no IT background. After the Cloud & DevOps track, I'm now a Cloud Engineer at TCS. EduSpark literally changed my career path completely.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div><div class="testi-name">Priya Jadhav</div><div class="testi-role">Cloud Engineer · TCS Mumbai</div></div>
+        <span class="testi-course-tag">Cloud & DevOps</span>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">The Cyber Security course is incredibly detailed and practical. Hands-on labs, CTF challenges, and real VAPT scenarios — I cleared my CEH exam on the first attempt!</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div><div class="testi-name">Rohit Shinde</div><div class="testi-role">SOC Analyst · Wipro Bangalore</div></div>
+        <span class="testi-course-tag">Cyber Security</span>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">Business Intelligence with Power BI was exactly what my career needed. I now work at Deloitte as a BI Analyst. The placement team was exceptional — they really go above and beyond.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">S</div>
+        <div><div class="testi-name">Sneha Kulkarni</div><div class="testi-role">BI Analyst · Deloitte</div></div>
+        <span class="testi-course-tag">Business Intelligence</span>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">IoT was my passion but I didn't know how to get into it professionally. EduSpark's IoT track gave me everything — hardware, firmware, and cloud integration. Now I'm at a startup building smart agriculture devices.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">V</div>
+        <div><div class="testi-name">Vinay Patil</div><div class="testi-role">IoT Engineer · AgroTech Solutions</div></div>
+        <span class="testi-course-tag">IoT Engineering</span>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★☆</div>
+      <p class="testi-text">The CAD course is top-notch. AutoCAD and SolidWorks training was very structured. I completed my certification and immediately got a job at a manufacturing firm in Pune MIDC area.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">K</div>
+        <div><div class="testi-name">Kavita Desai</div><div class="testi-role">CAD Designer · Bajaj Auto</div></div>
+        <span class="testi-course-tag">CAD Design</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <p class="sec-label">Investment Plans</p>
+  <h2 class="sec-title">Flexible Pricing<br>for Every Budget</h2>
+  <p class="sec-desc">We believe quality education should be accessible. Choose a plan that fits your goals and budget — EMI options available on all plans.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-name">Individual Course</div>
+      <div class="pricing-amount">₹4,999 <span>onwards</span></div>
+      <div class="pricing-period">per course · one-time</div>
+      <div class="pricing-divider"></div>
+      <div class="pricing-features">
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Course Completion Certificate</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Live instructor-led classes</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Lab & project access</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Recorded sessions (6 months)</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Community support</div>
+        <div class="p-feat disabled"><div class="p-feat-icon no">✗</div>Placement assistance</div>
+        <div class="p-feat disabled"><div class="p-feat-icon no">✗</div>1-on-1 mentoring</div>
+      </div>
+      <button class="pricing-btn outline" onclick="showToast('Redirecting to enrollment…')">Get Started</button>
+    </div>
+    <div class="pricing-card featured">
+      <span class="popular-tag">Most Popular</span>
+      <div class="pricing-tier">Professional</div>
+      <div class="pricing-name">Career Track Bundle</div>
+      <div class="pricing-amount">₹18,999 <span>onwards</span></div>
+      <div class="pricing-period">full track · one-time · EMI ₹3,166/mo</div>
+      <div class="pricing-divider"></div>
+      <div class="pricing-features">
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>All Individual Course benefits</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Full track (4–8 courses)</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Industry certifications prep</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Dedicated placement cell</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Mock interviews (unlimited)</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Resume & LinkedIn review</div>
+        <div class="p-feat disabled"><div class="p-feat-icon no">✗</div>1-on-1 dedicated mentor</div>
+      </div>
+      <button class="pricing-btn solid" onclick="showToast('Redirecting to Professional enrollment…')">Enroll Now</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-name">Corporate / Batch Training</div>
+      <div class="pricing-amount">Custom</div>
+      <div class="pricing-period">per batch · negotiable</div>
+      <div class="pricing-divider"></div>
+      <div class="pricing-features">
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>All Professional benefits</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Customised curriculum</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>On-site / online delivery</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Dedicated account manager</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>1-on-1 dedicated mentors</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Branded certifications</div>
+        <div class="p-feat"><div class="p-feat-icon yes">✓</div>Post-training support (1 year)</div>
+      </div>
+      <button class="pricing-btn outline" onclick="scrollTo('#contact')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-section">
+  <p class="sec-label" style="justify-content:center">Take the First Step</p>
+  <h2>Ready to Future-Proof<br>Your Career?</h2>
+  <p>Join 5,000+ learners who transformed their careers with MIDC EduSpark. Free counselling call — no commitment required.</p>
+  <div class="cta-btns">
+    <button class="btn-primary" onclick="scrollTo('#courses')">Browse All Courses</button>
+    <button class="btn-secondary" onclick="scrollTo('#contact')">Book Free Demo Class</button>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="sec-label">Get in Touch</p>
+  <h2 class="sec-title">Let's Start Your<br>Learning Journey</h2>
+  <div class="contact-grid">
+    <div>
+      <p class="sec-desc" style="margin-bottom:2rem">Have questions about a course, fees, or batches? Our counsellors are available 7 days a week to guide you.</p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-detail"><h4>Visit Us</h4><p>MIDC EduSpark Centre, A-Block, MIDC Industrial Area, Pune – 411018, Maharashtra</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-detail"><h4>Call Us</h4><p>+91 98765 43210 · +91 87654 32109<br>Mon–Sat: 9 AM – 7 PM</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-detail"><h4>Email Us</h4><p>admissions@midceduspark.in<br>info@midceduspark.in</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-detail"><h4>Batch Timings</h4><p>Morning: 7 AM – 10 AM · Afternoon: 1 PM – 4 PM<br>Evening: 6 PM – 9 PM · Weekend Batches Available</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:.05em;color:#fff;margin-bottom:1.5rem">Book a Free Counselling Session</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" placeholder="Rahul" id="fname"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" placeholder="Patil" id="lname"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" placeholder="rahul@email.com" id="femail"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" type="tel" placeholder="+91 98765 43210" id="fphone"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Course of Interest</label>
+        <select class="form-select form-input" id="fcourse">
+          <option value="">Select a course…</option>
+          <option>Artificial Intelligence (AI)</option>
+          <option>Machine Learning</option>
+          <option>AI Business Intelligence (AI BI)</option>
+          <option>Cloud Computing (AWS/Azure/GCP)</option>
+          <option>Cyber Security</option>
+          <option>IoT Engineering</option>
+          <option>Business Intelligence & Power BI</option>
+          <option>Data Science & Analytics</option>
+          <option>Full Stack Web Development</option>
+          <option>CAD Design (AutoCAD/SolidWorks)</option>
+          <option>DevOps & Containerisation</option>
+          <option>Networking (CCNA)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message (optional)</label>
+        <textarea class="form-textarea" placeholder="Tell us about your background and goals…" id="fmsg"></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">Send Enquiry →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo" style="margin-bottom:.8rem">
+        <div class="logo-icon">ES</div>
+        <div class="logo-text" style="font-size:1rem">MIDC EduSpark<span>Skill Development Centre</span></div>
+      </div>
+      <p>Empowering Maharashtra's workforce with industry-relevant technology skills. Government recognised · NSDC aligned · 100% placement commitment.</p>
+      <div class="footer-social">
+        <div class="soc">𝕏</div>
+        <div class="soc">in</div>
+        <div class="soc">f</div>
+        <div class="soc">▶</div>
+        <div class="soc">📷</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Top Courses</h5>
+      <ul>
+        <li><a href="#">Artificial Intelligence</a></li>
+        <li><a href="#">Machine Learning</a></li>
+        <li><a href="#">Cloud Computing</a></li>
+        <li><a href="#">Cyber Security</a></li>
+        <li><a href="#">IoT Engineering</a></li>
+        <li><a href="#">Business Intelligence</a></li>
+        <li><a href="#">CAD Design</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <ul>
+        <li><a href="#about">About EduSpark</a></li>
+        <li><a href="#tracks">Program Tracks</a></li>
+        <li><a href="#pricing">Pricing & EMI</a></li>
+        <li><a href="#process">How It Works</a></li>
+        <li><a href="#testimonials">Student Reviews</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Resources</h5>
+      <ul>
+        <li><a href="#">Student Portal</a></li>
+        <li><a href="#">Placement Cell</a></li>
+        <li><a href="#">Free Webinars</a></li>
+        <li><a href="#">Blog & Articles</a></li>
+        <li><a href="#">Career Counselling</a></li>
+        <li><a href="#">Refer & Earn</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 MIDC EduSpark. All rights reserved.</p>
+    <div class="footer-badges">
+      <span class="badge-cert">NSDC</span>
+      <span class="badge-cert">ISO 9001</span>
+      <span class="badge-cert">Govt. Recognised</span>
+    </div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- COURSE MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ── CURSOR ──
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px';
+});
+function addHov(el){
+  el.addEventListener('mouseenter',()=>{cur.classList.add('hov');ring.classList.add('hov')});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('hov');ring.classList.remove('hov')});
+}
+document.querySelectorAll('button,a,.course-card,.track-card,.mini-card,.contact-item,.pricing-card,.testi-card').forEach(addHov);
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── PARTICLES ──
+const pCont = document.getElementById('particles');
+for(let i=0;i<30;i++){
+  const p = document.createElement('div');
+  p.className='particle';
+  const left = Math.random()*100;
+  p.style.cssText = `left:${left}%;--px:${(Math.random()-.5)*100}px;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*8}s;width:${Math.random()<.3?3:2}px;height:${Math.random()<.3?3:2}px;opacity:0`;
+  pCont.appendChild(p);
+}
+
+// ── COUNTER ANIMATION ──
+function animCount(el, target, suffix='', prefix=''){
+  let start = 0; const dur = 2000; const step = dur/60;
+  const inc = target/60;
+  const timer = setInterval(()=>{
+    start = Math.min(start+inc,target);
+    el.textContent = prefix + Math.floor(start).toLocaleString('en-IN') + suffix;
+    if(start>=target) clearInterval(timer);
+  },step);
+}
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      animCount(document.getElementById('sCount1'),5000,'+');
+      animCount(document.getElementById('sCount2'),25,'+');
+      animCount(document.getElementById('sCount3'),80,'+');
+      animCount(document.getElementById('sCount4'),92,'%');
+      observer.disconnect();
+    }
+  });
+},{threshold:.4});
+observer.observe(document.getElementById('sCount1'));
+
+// ── COURSES DATA ──
+const courses = [
+  {id:1,cat:'ai',icon:'🤖',name:'Artificial Intelligence',tagline:'Build intelligent systems that think, learn, and predict.',brand:'Core AI',price:'₹12,999',oldPrice:'₹18,000',duration:'4 months',mode:'Online + Offline',level:'Intermediate',emi:'₹2,166/mo',badge:'HOT',badgeColor:'rgba(239,68,68,.15)#ef4444',color:'rgba(0,212,255,.15)',glow:'rgba(0,212,255,.3)',topics:['Python for AI','Neural Networks','Computer Vision','NLP','LLMs & Prompt Engineering','AI Project Deployment'],desc:'Master the core of Artificial Intelligence — from neural networks to deploying AI apps. Industry-certified curriculum with hands-on projects.'},
+  {id:2,cat:'ai',icon:'🧠',name:'Machine Learning',tagline:'Algorithms that learn patterns and make predictions.',brand:'ML Track',price:'₹11,499',oldPrice:'₹16,000',duration:'3.5 months',mode:'Online + Offline',level:'Intermediate',emi:'₹1,916/mo',badge:'NEW',badgeColor:'rgba(16,185,129,.15)#10b981',color:'rgba(124,58,237,.15)',glow:'rgba(124,58,237,.4)',topics:['Supervised Learning','Unsupervised Learning','Regression & Classification','Random Forest & XGBoost','Model Evaluation','Scikit-learn & TensorFlow'],desc:'Learn all major ML algorithms from scratch, implement real-world use cases, and build a project portfolio that impresses recruiters.'},
+  {id:3,cat:'data',icon:'📊',name:'AI Business Intelligence',tagline:'Turn raw data into boardroom-ready insights.',brand:'AI BI',price:'₹9,999',oldPrice:'₹14,000',duration:'3 months',mode:'Online + Offline',level:'Beginner-Friendly',emi:'₹1,666/mo',badge:'POPULAR',badgeColor:'rgba(245,158,11,.15)#f59e0b',color:'rgba(245,158,11,.12)',glow:'rgba(245,158,11,.3)',topics:['Power BI Desktop','DAX & M Language','AI Visuals','Azure AI Integration','Dashboard Design','Storytelling with Data'],desc:'Master Power BI with AI integrations. Build executive dashboards and automated reports that drive business decisions.'},
+  {id:4,cat:'cloud',icon:'☁️',name:'Cloud Computing',tagline:'Design, deploy, and scale on AWS, Azure & GCP.',brand:'Cloud Pro',price:'₹13,499',oldPrice:'₹19,000',duration:'4 months',mode:'Online + Offline',level:'Intermediate',emi:'₹2,249/mo',badge:'HOT',badgeColor:'rgba(239,68,68,.15)#ef4444',color:'rgba(0,212,255,.1)',glow:'rgba(0,212,255,.25)',topics:['AWS Core Services','Azure Fundamentals','GCP Essentials','Cloud Storage & Networking','Serverless Architecture','Cost Optimisation'],desc:'Get cloud-certified with hands-on labs on all three major platforms. Prepare for AWS Solutions Architect, Azure AZ-900, and GCP ACE.'},
+  {id:5,cat:'security',icon:'🛡️',name:'Cyber Security',tagline:'Protect systems. Ethical hacking & threat defense.',brand:'SecureIT',price:'₹14,999',oldPrice:'₹21,000',duration:'5 months',mode:'Online + Offline',level:'Intermediate',emi:'₹2,499/mo',badge:'HOT',badgeColor:'rgba(239,68,68,.15)#ef4444',color:'rgba(16,185,129,.1)',glow:'rgba(16,185,129,.3)',topics:['Network Security','Ethical Hacking','VAPT Techniques','SOC Operations','OWASP Top 10','CEH Exam Prep'],desc:'From ethical hacking to SOC analysis — this comprehensive program prepares you for CEH, CompTIA Security+, and real-world cybersecurity roles.'},
+  {id:6,cat:'iot',icon:'📡',name:'IoT Engineering',tagline:'Connect the physical world to the cloud.',brand:'IoT Lab',price:'₹11,999',oldPrice:'₹17,000',duration:'4 months',mode:'Offline (Hardware Labs)',level:'Intermediate',emi:'₹1,999/mo',badge:'NEW',badgeColor:'rgba(16,185,129,.15)#10b981',color:'rgba(245,158,11,.1)',glow:'rgba(245,158,11,.3)',topics:['Arduino & Raspberry Pi','Sensors & Actuators','MQTT Protocol','IoT Cloud Platforms','Edge AI','Smart Home Project'],desc:'Hands-on IoT course with real hardware kits included. Design, build, and connect smart devices to AWS IoT and Azure IoT Hub.'},
+  {id:7,cat:'data',icon:'📈',name:'Data Science & Analytics',tagline:'Extract insights from massive datasets.',brand:'DataCore',price:'₹13,999',oldPrice:'₹19,500',duration:'4.5 months',mode:'Online + Offline',level:'Intermediate',emi:'₹2,333/mo',badge:'POPULAR',badgeColor:'rgba(245,158,11,.15)#f59e0b',color:'rgba(124,58,237,.12)',glow:'rgba(124,58,237,.3)',topics:['Python & Pandas','SQL & NoSQL','Data Visualisation','Statistical Analysis','Predictive Modelling','Tableau & Power BI'],desc:'End-to-end data science program covering collection, cleaning, analysis, modelling, and visualisation of data for business insights.'},
+  {id:8,cat:'dev',icon:'💻',name:'Full Stack Web Development',tagline:'Build modern web apps from front to back.',brand:'WebStack',price:'₹14,499',oldPrice:'₹20,000',duration:'5 months',mode:'Online + Offline',level:'Beginner-Friendly',emi:'₹2,416/mo',badge:'HOT',badgeColor:'rgba(239,68,68,.15)#ef4444',color:'rgba(244,63,94,.1)',glow:'rgba(244,63,94,.3)',topics:['HTML/CSS/JavaScript','React.js','Node.js & Express','MongoDB & MySQL','REST APIs','AWS Deployment'],desc:'Become a full-stack developer in 5 months. Build 5+ real-world projects covering React frontend, Node.js backend, and cloud deployment.'},
+  {id:9,cat:'design',icon:'📐',name:'AutoCAD & CAD Design',tagline:'Master 2D & 3D engineering design tools.',brand:'CAD Studio',price:'₹7,999',oldPrice:'₹12,000',duration:'2.5 months',mode:'Offline (Design Labs)',level:'Beginner-Friendly',emi:'₹1,333/mo',badge:null,color:'rgba(6,182,212,.1)',glow:'rgba(6,182,212,.3)',topics:['AutoCAD 2D Drafting','3D Modelling','SolidWorks Basics','Mechanical Drawings','GD&T','Industry Project'],desc:'Learn AutoCAD and SolidWorks from scratch with a focus on mechanical and civil engineering drawings that meet industry standards.'},
+  {id:10,cat:'cloud',icon:'⚙️',name:'DevOps & Containerisation',tagline:'Automate, deploy, and scale with CI/CD.',brand:'DevOps',price:'₹12,499',oldPrice:'₹17,500',duration:'3.5 months',mode:'Online + Offline',level:'Intermediate',emi:'₹2,083/mo',badge:'NEW',badgeColor:'rgba(16,185,129,.15)#10b981',color:'rgba(0,212,255,.08)',glow:'rgba(0,212,255,.2)',topics:['Linux & Shell Scripting','Git & GitHub Actions','Docker','Kubernetes','Jenkins CI/CD','Monitoring & Logging'],desc:'Master modern DevOps practices — from containers to production pipelines. Prepare for AWS DevOps and CKA certifications.'},
+  {id:11,cat:'security',icon:'🔐',name:'Networking & CCNA',tagline:'Foundations of enterprise networking.',brand:'NetPro',price:'₹8,999',oldPrice:'₹13,000',duration:'3 months',mode:'Online + Offline',level:'Beginner-Friendly',emi:'₹1,499/mo',badge:null,color:'rgba(16,185,129,.08)',glow:'rgba(16,185,129,.2)',topics:['OSI Model','IP Addressing & Subnetting','Routing & Switching','VLAN & VPN','Network Security','CCNA Exam Prep'],desc:'CCNA prep course with complete networking fundamentals, Cisco router configuration, and real lab simulations using Packet Tracer.'},
+  {id:12,cat:'design',icon:'🎨',name:'UI/UX Design with Figma',tagline:'Design beautiful, user-centred digital products.',brand:'DesignLab',price:'₹6,999',oldPrice:'₹10,500',duration:'2 months',mode:'Online',level:'Beginner-Friendly',emi:'₹1,166/mo',badge:'NEW',badgeColor:'rgba(16,185,129,.15)#10b981',color:'rgba(168,85,247,.1)',glow:'rgba(168,85,247,.3)',topics:['Design Thinking','Wireframing','Figma Prototyping','Typography & Color','Usability Testing','Portfolio Building'],desc:'Learn UI/UX design end-to-end using Figma. Design real apps, build your portfolio, and land roles as a product/UX designer.'},
+];
+
+let activeFilter = 'all';
+function renderCourses(filter='all'){
+  activeFilter = filter;
+  const filtered = filter==='all'?courses:courses.filter(c=>c.cat===filter);
+  const grid = document.getElementById('coursesGrid');
+  grid.innerHTML = filtered.map(c=>{
+    const [bgC,borderC] = (c.color||'rgba(0,212,255,.1)rgba(0,212,255,.3)').split(/(?<=[^.])rgba/g).filter(Boolean);
+    return `
+    <div class="course-card" onclick="openModal(${c.id})">
+      <div class="course-card-top">
+        <div class="course-card-glow" style="background:radial-gradient(circle,${c.glow||'rgba(0,212,255,.3)'},transparent)"></div>
+        <div class="course-tag-row">
+          ${c.badge?`<span class="course-tag" style="color:${(c.badgeColor||'#ef4444 rgba(239,68,68,.15)').split('rgba')[0].trim()};border-color:${(c.badgeColor||'rgba(239,68,68,.3)').split('rgba')[0].trim()};background:rgba${(c.badgeColor||'').split('rgba')[1]||'(239,68,68,.1)'}">${c.badge}</span>`:''}
+          <span class="course-tag" style="color:var(--muted);border-color:var(--border2)">${c.level}</span>
+        </div>
+        <span class="course-icon">${c.icon}</span>
+        <div class="course-name">${c.name}</div>
+        <div class="course-tagline">${c.tagline}</div>
+        <div class="course-meta">
+          <span class="meta-item">🕐 <span>${c.duration}</span></span>
+          <span class="meta-item">📍 <span>${c.mode}</span></span>
+        </div>
+      </div>
+      <div class="course-card-bot">
+        <div class="course-price-row">
+          <div class="price-stack">
+            <span class="price-old">${c.oldPrice}</span>
+            <span class="price-new">${c.price}</span>
+            <span class="price-emi">EMI from ${c.emi}</span>
+          </div>
+          <button class="enroll-btn" onclick="event.stopPropagation();openModal(${c.id})">View Details</button>
+        </div>
+      </div>
+    </div>`}).join('');
+  document.querySelectorAll('.course-card,.enroll-btn').forEach(addHov);
+}
+
+function filterCourses(cat,btn){
+  document.querySelectorAll('.cf-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderCourses(cat);
+}
+
+// ── MODAL ──
+function openModal(id){
+  const c = courses.find(x=>x.id===id);
+  if(!c)return;
+  document.getElementById('modalContent').innerHTML=`
+    <span class="modal-icon">${c.icon}</span>
+    <div class="modal-tag">${c.brand} · ${c.level}</div>
+    <div class="modal-title">${c.name}</div>
+    <div class="modal-desc">${c.desc}</div>
+    <div class="modal-info-grid">
+      <div class="modal-info-item"><label>Duration</label><value>${c.duration}</value></div>
+      <div class="modal-info-item"><label>Mode</label><value style="font-size:.85rem">${c.mode}</value></div>
+      <div class="modal-info-item"><label>Fee</label><value style="color:var(--primary)">${c.price}</value></div>
+      <div class="modal-info-item"><label>EMI Option</label><value style="color:var(--green);font-size:.9rem">${c.emi}</value></div>
+    </div>
+    <div class="modal-topics">
+      <h4>Topics Covered</h4>
+      <div class="modal-topics-list">${c.topics.map(t=>`<span class="topic">${t}</span>`).join('')}</div>
+    </div>
+    <button class="modal-enroll-btn" onclick="enrollNow('${c.name}')">Enroll in This Course →</button>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalDirect()}
+function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow=''}
+function enrollNow(name){closeModalDirect();showToast(`✓ Enrolled in ${name}! We'll call you shortly.`);}
+
+// ── TOAST ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ── FORM ──
+function submitForm(){
+  const n=document.getElementById('fname').value;
+  const e=document.getElementById('femail').value;
+  if(!n||!e){showToast('❌ Please fill in required fields.');return;}
+  showToast(`✓ Thank you ${n}! Our team will contact you within 24 hours.`);
+  ['fname','lname','femail','fphone','fcourse','fmsg'].forEach(id=>{document.getElementById(id).value=''});
+}
+
+// ── MOBILE MENU ──
+function openMobileMenu(){document.getElementById('mobileMenu').classList.add('open');document.body.style.overflow='hidden'}
+function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow=''}
+
+// ── SCROLL HELPER ──
+function scrollTo(id){document.querySelector(id).scrollIntoView({behavior:'smooth'})}
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.animation='fadeUp .7s ease forwards';
+      e.target.style.opacity='0';
+      revealObserver.unobserve(e.target);
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.course-card,.track-card,.testi-card,.pricing-card,.step,.contact-item,.mini-card,.feature-item').forEach(el=>{
+  el.style.opacity='0';revealObserver.observe(el);
+});
+
+// ── INIT ──
+renderCourses('all');
+</script>
+</body>
+</html>
